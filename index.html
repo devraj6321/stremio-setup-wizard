@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stremio Setup Wizard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>Stremio All-in-One Setup Wizard</h1>
+      <p>Guided configuration for AIOStreams, AIOMetadata, Watchly, subtitles, and cleanup.</p>
+    </header>
+
+    <main class="app-main">
+      <aside class="steps-nav" aria-label="Wizard steps">
+        <ol id="stepList" class="steps-list">
+          <li class="step-item active" data-step="1">1. Account & backup</li>
+          <li class="step-item" data-step="2">2. Keys & APIs</li>
+          <li class="step-item" data-step="3">3. Regions & catalogs</li>
+          <li class="step-item" data-step="4">4. Stream profile</li>
+          <li class="step-item" data-step="5">5. Metadata & cleanup</li>
+          <li class="step-item" data-step="6">6. Watchly & Trakt</li>
+          <li class="step-item" data-step="7">7. Subtitles & language</li>
+          <li class="step-item" data-step="8">8. Optional packs</li>
+          <li class="step-item" data-step="9">9. Review & export</li>
+        </ol>
+      </aside>
+
+      <section class="wizard" aria-live="polite">
+        <!-- Step 1 -->
+        <section class="wizard-step" data-step="1">
+          <h2>Account & backup</h2>
+          <p>Select how you want to handle your Stremio account. A backup is strongly recommended before big changes.</p>
+
+          <div class="field-group">
+            <label for="accountMode">Account mode</label>
+            <select id="accountMode">
+              <option value="existing">Use existing account (recommended)</option>
+              <option value="new">Create a new account (Duck QuickStart / Numb3rs)</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="email">Stremio email (optional)</label>
+            <input id="email" type="email" placeholder="you@example.com" />
+          </div>
+
+          <fieldset class="field-group">
+            <legend>Safety & bootstrap tools</legend>
+            <label><input type="checkbox" id="useDuckBackup" checked /> Use Duck Time Machine / Account Cloner for backup</label>
+            <label><input type="checkbox" id="useBootstrapper" checked /> Use Stremio Account Bootstrapper preset</label>
+          </fieldset>
+        </section>
+
+        <!-- Step 2 -->
+        <section class="wizard-step" data-step="2" hidden>
+          <h2>Debrid & API keys</h2>
+          <p>Provide keys for debrid and metadata services. Only TMDB is required; others are optional but recommended.</p>
+
+          <div class="field-group">
+            <label for="realDebrid">Real Debrid API key</label>
+            <input id="realDebrid" type="text" autocomplete="off" />
+          </div>
+
+          <div class="field-group">
+            <label for="torBox">TorBox API key</label>
+            <input id="torBox" type="text" autocomplete="off" />
+          </div>
+
+          <div class="field-group">
+            <label for="debridio">Debridio API key</label>
+            <input id="debridio" type="text" autocomplete="off" />
+          </div>
+
+          <div class="field-group required">
+            <label for="tmdb">TMDB API key <span aria-hidden="true">*</span></label>
+            <input id="tmdb" type="text" autocomplete="off" />
+            <small>Required for AIOStreams / AIOMetadata matching and catalogs.</small>
+          </div>
+
+          <div class="field-group">
+            <label for="rpdb">RPDB API key</label>
+            <input id="rpdb" type="text" autocomplete="off" />
+            <small>Optional, for improved posters / quality-of-life metadata.</small>
+          </div>
+        </section>
+
+        <!-- Step 3 -->
+        <section class="wizard-step" data-step="3" hidden>
+          <h2>Regions & catalogs</h2>
+          <p>Select the regions you care about. The wizard will map these to AIOMetadata catalogs and Watchly lists.</p>
+
+          <fieldset class="field-group">
+            <legend>Primary catalog regions</legend>
+            <label><input type="checkbox" name="region" value="global" checked /> Global</label>
+            <label><input type="checkbox" name="region" value="us" checked /> United States</label>
+            <label><input type="checkbox" name="region" value="in" checked /> India</label>
+            <label><input type="checkbox" name="region" value="latam" /> Latin America</label>
+            <label><input type="checkbox" name="region" value="eu" /> Europe</label>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend>Catalog types</legend>
+            <label><input type="checkbox" name="catalogType" value="trending" checked /> Trending</label>
+            <label><input type="checkbox" name="catalogType" value="popular" checked /> Popular</label>
+            <label><input type="checkbox" name="catalogType" value="discover" checked /> Discovery / recommendations</label>
+            <label><input type="checkbox" name="catalogType" value="anime" checked /> Anime catalogs</label>
+            <label><input type="checkbox" name="catalogType" value="providers" checked /> Streaming provider catalogs (Netflix, Disney+, etc.)</label>
+          </fieldset>
+        </section>
+
+        <!-- Step 4 -->
+        <section class="wizard-step" data-step="4" hidden>
+          <h2>Stream profile</h2>
+          <p>Choose how streams should be prioritized. AIOStreams will coordinate P2P, HTTP and debrid sources.</p>
+
+          <fieldset class="field-group">
+            <legend>Profile</legend>
+            <label><input type="radio" name="streamProfile" value="debrid" checked /> Debrid-first (RD / TorBox / Debridio, with P2P+HTTP fallback)</label>
+            <label><input type="radio" name="streamProfile" value="free" /> Free only (P2P + HTTP, no debrid)</label>
+            <label><input type="radio" name="streamProfile" value="http" /> HTTP-first (minimal P2P, strong HTTP/debrid usage)</label>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend>Preferred addons</legend>
+            <p class="hint">These are used to build AIOStreams groups and filters. You can still tweak them later in AIOStreams UI.</p>
+            <div class="columns">
+              <div>
+                <h3>P2P sources</h3>
+                <label><input type="checkbox" name="p2p" value="Torrentio" checked /> Torrentio</label>
+                <label><input type="checkbox" name="p2p" value="StremThru Torz" checked /> StremThru Torz</label>
+                <label><input type="checkbox" name="p2p" value="Meteor" checked /> Meteor</label>
+                <label><input type="checkbox" name="p2p" value="Comet" checked /> Comet</label>
+                <label><input type="checkbox" name="p2p" value="MediaFusion" /> MediaFusion</label>
+                <label><input type="checkbox" name="p2p" value="TorrentsDB" /> TorrentsDB</label>
+              </div>
+              <div>
+                <h3>HTTP sources</h3>
+                <label><input type="checkbox" name="http" value="Sootio" checked /> Sootio</label>
+                <label><input type="checkbox" name="http" value="Peerflix" checked /> Peerflix</label>
+                <label><input type="checkbox" name="http" value="Flix-Streams" checked /> Flix-Streams</label>
+                <label><input type="checkbox" name="http" value="HDHub" checked /> HDHub</label>
+              </div>
+              <div>
+                <h3>Optional extras</h3>
+                <label><input type="checkbox" name="optionalScraper" value="Filmora" /> Filmora</label>
+                <label><input type="checkbox" name="optionalScraper" value="Watcho" /> Watcho</label>
+                <label><input type="checkbox" name="optionalScraper" value="TorrentClaw" /> TorrentClaw</label>
+                <label><input type="checkbox" name="optionalScraper" value="ThePirateBay+" /> ThePirateBay+</label>
+                <label><input type="checkbox" name="optionalScraper" value="WebStreamrMBG" /> WebStreamrMBG</label>
+                <label><input type="checkbox" name="optionalScraper" value="NebulaStreams" /> NebulaStreams</label>
+                <label><input type="checkbox" name="optionalScraper" value="Tenies.SITE" /> Tenies.SITE</label>
+                <label><input type="checkbox" name="optionalScraper" value="PenguPlay" /> PenguPlay</label>
+              </div>
+            </div>
+          </fieldset>
+        </section>
+
+        <!-- Step 5 -->
+        <section class="wizard-step" data-step="5" hidden>
+          <h2>Metadata & cleanup</h2>
+          <p>Configure AIOMetadata catalogs and clean up default Stremio metadata (Cinemeta / Cineby).</p>
+
+          <fieldset class="field-group">
+            <legend>Metadata sources</legend>
+            <label><input type="checkbox" name="metadataSource" value="TMDB" checked /> TMDB</label>
+            <label><input type="checkbox" name="metadataSource" value="TVDB" checked /> TVDB</label>
+            <label><input type="checkbox" name="metadataSource" value="AniList" checked /> AniList</label>
+            <label><input type="checkbox" name="metadataSource" value="MAL" checked /> MyAnimeList</label>
+            <label><input type="checkbox" name="metadataSource" value="RPDB" /> RPDB</label>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend>Cleanup actions</legend>
+            <label><input type="checkbox" id="removeCinemeta" checked /> Hide or patch Cinemeta catalogs (via Cinemeta Patcher / AIOMetadata)</label>
+            <label><input type="checkbox" id="removeCineby" checked /> Remove Cineby-like default discovery addons</label>
+            <label><input type="checkbox" id="addonPrune" checked /> Prune unused and overlapping addons (Addon Butler)</label>
+          </fieldset>
+        </section>
+
+        <!-- Step 6 -->
+        <section class="wizard-step" data-step="6" hidden>
+          <h2>Watchly & Trakt</h2>
+          <p>Connect Watchly and Trakt to power personalized catalogs and recommendations.</p>
+
+          <fieldset class="field-group">
+            <legend>Watchly</legend>
+            <label><input type="checkbox" id="useWatchly" checked /> Enable Watchly addon</label>
+            <label><input type="checkbox" id="watchlyContinue" checked /> Add "Continue watching" / next episode catalogs</label>
+            <label><input type="checkbox" id="watchlyRecommend" checked /> Add personalized recommendations catalogs</label>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend>Trakt</legend>
+            <label><input type="checkbox" id="useTrakt" checked /> Connect Trakt account</label>
+            <label><input type="checkbox" id="enableTraktScrobbling" checked /> Enable built-in Trakt Scrobbling (keep, but uninstall Trakt Integration addon)</label>
+          </fieldset>
+        </section>
+
+        <!-- Step 7 -->
+        <section class="wizard-step" data-step="7" hidden>
+          <h2>Subtitles & language</h2>
+          <p>Choose subtitle languages and providers.</p>
+
+          <fieldset class="field-group">
+            <legend>Subtitle providers</legend>
+            <label><input type="checkbox" name="subtitleProvider" value="Subsense" checked /> Subsense</label>
+            <label><input type="checkbox" name="subtitleProvider" value="OpenSubtitles Pro" checked /> OpenSubtitles Pro</label>
+            <label><input type="checkbox" name="subtitleProvider" value="SubHero" /> SubHero / SubSource</label>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend>Preferred subtitle languages</legend>
+            <label><input type="checkbox" name="subtitleLang" value="en" checked /> English</label>
+            <label><input type="checkbox" name="subtitleLang" value="hi" checked /> Hindi</label>
+            <label><input type="checkbox" name="subtitleLang" value="es" /> Spanish</label>
+            <label><input type="checkbox" name="subtitleLang" value="fr" /> French</label>
+            <label><input type="checkbox" name="subtitleLang" value="other" /> Other (configure manually in Stremio)</label>
+          </fieldset>
+        </section>
+
+        <!-- Step 8 -->
+        <section class="wizard-step" data-step="8" hidden>
+          <h2>Optional packs</h2>
+          <p>Enable extra packs for anime, regional TV, Usenet fallback, and quality-of-life addons.</p>
+
+          <fieldset class="field-group">
+            <legend>Packs</legend>
+            <label><input type="checkbox" name="pack" value="anime" checked /> Anime pack (Anime Kitsu, Nexio Torii/Nagare, etc.)</label>
+            <label><input type="checkbox" name="pack" value="regionalTv" checked /> Regional TV (Argentina TV, etc.)</label>
+            <label><input type="checkbox" name="pack" value="usenet" /> Usenet fallback (Easynews++)</label>
+            <label><input type="checkbox" name="pack" value="stats" checked /> Advanced statistics & addon management (AIOManager, statistics block)</label>
+          </fieldset>
+        </section>
+
+        <!-- Step 9 -->
+        <section class="wizard-step" data-step="9" hidden>
+          <h2>Review & export</h2>
+          <p>Review your setup plan. You can copy the JSON or download it as a file to keep as a reference.</p>
+
+          <div class="review-layout">
+            <div class="review-panel">
+              <h3>Setup plan JSON</h3>
+              <textarea id="planJson" readonly rows="18" aria-label="Generated setup plan"></textarea>
+              <div class="review-actions">
+                <button type="button" id="copyJson">Copy JSON</button>
+                <button type="button" id="downloadJson">Download JSON</button>
+              </div>
+            </div>
+            <div class="review-panel">
+              <h3>Human-readable instructions</h3>
+              <div id="planSummary" class="plan-summary" aria-label="Summary of next steps"></div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="wizard-footer">
+          <button type="button" id="prevStep" class="secondary">Back</button>
+          <button type="button" id="nextStep" class="primary">Next</button>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

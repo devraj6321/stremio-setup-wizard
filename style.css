@@ -1,0 +1,257 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(90deg, #1d4ed8, #0ea5e9);
+  color: white;
+}
+
+.app-header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.6rem;
+}
+
+.app-header p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  padding: 1.5rem;
+  gap: 1.5rem;
+}
+
+.steps-nav {
+  width: 240px;
+  background: #020617;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #1f2937;
+}
+
+.steps-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step-item {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.step-item + .step-item {
+  margin-top: 0.25rem;
+}
+
+.step-item.active {
+  background: #1d4ed8;
+  color: #f9fafb;
+}
+
+.step-item.completed {
+  background: #0f172a;
+  color: #22c55e;
+}
+
+.wizard {
+  flex: 1;
+  background: #020617;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+}
+
+.wizard-step h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.wizard-step p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+
+.field-group {
+  margin-bottom: 1rem;
+}
+
+.field-group label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.field-group input[type="text"],
+.field-group input[type="email"],
+.field-group select,
+textarea {
+  width: 100%;
+  padding: 0.45rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #1f2937;
+  background: #0f172a;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+}
+
+.field-group small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.field-group.required label span {
+  color: #f97316;
+}
+
+fieldset.field-group {
+  border: 1px solid #1f2937;
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.75rem 0.5rem;
+}
+
+fieldset legend {
+  padding: 0 0.25rem;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+fieldset label {
+  margin-bottom: 0.35rem;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.columns > div {
+  flex: 1 1 180px;
+}
+
+.wizard-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid #1f2937;
+}
+
+button.primary,
+button.secondary {
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+}
+
+button.primary {
+  background: #1d4ed8;
+  color: #f9fafb;
+}
+
+button.primary:disabled,
+button.secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  background: transparent;
+  color: #e5e7eb;
+  border: 1px solid #374151;
+}
+
+.review-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.review-panel {
+  flex: 1 1 260px;
+}
+
+.review-panel h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+#planJson {
+  width: 100%;
+  resize: vertical;
+}
+
+.review-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.plan-summary p {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .app-main {
+    flex-direction: column;
+  }
+
+  .steps-nav {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .steps-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.25rem;
+  }
+
+  .step-item {
+    white-space: nowrap;
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
