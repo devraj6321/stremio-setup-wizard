@@ -37,15 +37,19 @@ function readStepData(step) {
     case 1: {
       state.account.accountMode = document.getElementById('accountMode').value;
       state.account.email = document.getElementById('email').value.trim();
+      state.account.password = document.getElementById('password').value.trim();
       state.account.useDuckBackup = document.getElementById('useDuckBackup').checked;
       state.account.useBootstrapper = document.getElementById('useBootstrapper').checked;
       break;
     }
     case 2: {
+      const debridServices = Array.from(document.querySelectorAll('input[name="debridService"]:checked')).map(i => i.value);
+      state.keys.debridServices = debridServices;
       state.keys.realDebrid = document.getElementById('realDebrid').value.trim();
       state.keys.torBox = document.getElementById('torBox').value.trim();
       state.keys.debridio = document.getElementById('debridio').value.trim();
       state.keys.tmdb = document.getElementById('tmdb').value.trim();
+      state.keys.tvdb = document.getElementById('tvdb').value.trim();
       state.keys.rpdb = document.getElementById('rpdb').value.trim();
       break;
     }
@@ -105,6 +109,20 @@ function validateStep(step) {
     if (!state.keys.tmdb) {
       alert('TMDB API key is required.');
       return false;
+    }
+    // If user selected any debrid services, ensure each selected one has a key
+    const services = state.keys.debridServices || [];
+    if (services.length > 0) {
+      const missing = [];
+      services.forEach(s => {
+        if (s === 'realDebrid' && !state.keys.realDebrid) missing.push('Real-Debrid');
+        if (s === 'torBox' && !state.keys.torBox) missing.push('TorBox');
+        if (s === 'debridio' && !state.keys.debridio) missing.push('Debridio');
+      });
+      if (missing.length) {
+        alert('Please add API keys for selected debrid services: ' + missing.join(', '));
+        return false;
+      }
     }
   }
   return true;
@@ -167,8 +185,8 @@ function renderPlan(plan) {
   }
 
   // Debrid & API keys
-  parts.push('<p><strong>Debrid keys:</strong> ' + ['realDebrid', 'torBox', 'debridio'].filter(k => plan.keys[k]).join(', ') + '</p>');
-  parts.push('<p><strong>Metadata keys:</strong> TMDB ' + (plan.keys.tmdb ? '✓' : '✗') + ', RPDB ' + (plan.keys.rpdb ? '✓' : 'optional') + '</p>');
+  parts.push('<p><strong>Debrid services:</strong> ' + ((plan.keys.debridServices || []).join(', ') || 'None (free-only profile possible)') + '</p>');
+  parts.push('<p><strong>Metadata keys:</strong> TMDB ' + (plan.keys.tmdb ? '✓' : '✗') + ', TVDB ' + (plan.keys.tvdb ? 'optional' : 'none') + ', RPDB ' + (plan.keys.rpdb ? 'optional' : 'none') + '</p>');
 
   // Streams
   parts.push('<p><strong>Stream profile:</strong> ' + plan.features.streamProfile + '</p>');

@@ -16,8 +16,8 @@
     <main class="app-main">
       <aside class="steps-nav" aria-label="Wizard steps">
         <ol id="stepList" class="steps-list">
-          <li class="step-item active" data-step="1">1. Account & backup</li>
-          <li class="step-item" data-step="2">2. Keys & APIs</li>
+          <li class="step-item active" data-step="1">1. Account & login</li>
+          <li class="step-item" data-step="2">2. Debrid & APIs</li>
           <li class="step-item" data-step="3">3. Regions & catalogs</li>
           <li class="step-item" data-step="4">4. Stream profile</li>
           <li class="step-item" data-step="5">5. Metadata & cleanup</li>
@@ -31,8 +31,8 @@
       <section class="wizard" aria-live="polite">
         <!-- Step 1 -->
         <section class="wizard-step" data-step="1">
-          <h2>Account & backup</h2>
-          <p>Select how you want to handle your Stremio account. A backup is strongly recommended before big changes.</p>
+          <h2>Account & login</h2>
+          <p>This wizard does not log in to Stremio for you, but it can keep your account details in the plan so you can reuse them. Credentials stay in your browser and in the exported JSON only.</p>
 
           <div class="field-group">
             <label for="accountMode">Account mode</label>
@@ -43,8 +43,14 @@
           </div>
 
           <div class="field-group">
-            <label for="email">Stremio email (optional)</label>
+            <label for="email">Stremio email / username</label>
             <input id="email" type="email" placeholder="you@example.com" />
+          </div>
+
+          <div class="field-group">
+            <label for="password">Stremio password (optional)</label>
+            <input id="password" type="password" autocomplete="off" />
+            <small>This password is not sent anywhere; it is only saved locally in your browser and in the plan JSON for your own reference.</small>
           </div>
 
           <fieldset class="field-group">
@@ -57,33 +63,56 @@
         <!-- Step 2 -->
         <section class="wizard-step" data-step="2" hidden>
           <h2>Debrid & API keys</h2>
-          <p>Provide keys for debrid and metadata services. Only TMDB is required; others are optional but recommended.</p>
+          <p>Select which debrid services you use and add separate keys for debrid and metadata APIs. Required fields are marked with *</p>
 
-          <div class="field-group">
-            <label for="realDebrid">Real Debrid API key</label>
-            <input id="realDebrid" type="text" autocomplete="off" />
-          </div>
+          <div class="columns">
+            <div class="field-group">
+              <h3>Debrid services</h3>
+              <p class="hint">Pick the services you actually use. Selected services will be required to have a key.</p>
+              <label><input type="checkbox" name="debridService" value="realDebrid" /> Real-Debrid</label>
+              <div class="inline-fields">
+                <input id="realDebrid" type="text" placeholder="Real-Debrid API token" autocomplete="off" />
+                <a href="https://real-debrid.com/apitoken" target="_blank" rel="noreferrer">Get API key</a>
+              </div>
 
-          <div class="field-group">
-            <label for="torBox">TorBox API key</label>
-            <input id="torBox" type="text" autocomplete="off" />
-          </div>
+              <label><input type="checkbox" name="debridService" value="torBox" /> TorBox</label>
+              <div class="inline-fields">
+                <input id="torBox" type="text" placeholder="TorBox API key" autocomplete="off" />
+                <a href="https://torbox.app" target="_blank" rel="noreferrer">Open TorBox</a>
+              </div>
 
-          <div class="field-group">
-            <label for="debridio">Debridio API key</label>
-            <input id="debridio" type="text" autocomplete="off" />
-          </div>
+              <label><input type="checkbox" name="debridService" value="debridio" /> Debridio</label>
+              <div class="inline-fields">
+                <input id="debridio" type="text" placeholder="Debridio API key" autocomplete="off" />
+                <a href="https://debrid.io" target="_blank" rel="noreferrer">Open Debridio</a>
+              </div>
 
-          <div class="field-group required">
-            <label for="tmdb">TMDB API key <span aria-hidden="true">*</span></label>
-            <input id="tmdb" type="text" autocomplete="off" />
-            <small>Required for AIOStreams / AIOMetadata matching and catalogs.</small>
-          </div>
+              <small>For security, do not paste private API tokens into public/shared devices.</small>
+            </div>
 
-          <div class="field-group">
-            <label for="rpdb">RPDB API key</label>
-            <input id="rpdb" type="text" autocomplete="off" />
-            <small>Optional, for improved posters / quality-of-life metadata.</small>
+            <div class="field-group">
+              <h3>Metadata APIs</h3>
+              <p class="hint">TMDB is required for AIOStreams / AIOMetadata. TVDB is optional but useful for series metadata.</p>
+              <label for="tmdb">TMDB API key <span aria-hidden="true">*</span></label>
+              <div class="inline-fields">
+                <input id="tmdb" type="text" placeholder="TMDB v3 API key" autocomplete="off" />
+                <a href="https://developer.themoviedb.org/docs/getting-started" target="_blank" rel="noreferrer">Get TMDB key</a>
+              </div>
+
+              <label for="tvdb">TVDB API key</label>
+              <div class="inline-fields">
+                <input id="tvdb" type="text" placeholder="TVDB v4 API key" autocomplete="off" />
+                <a href="https://support.thetvdb.com/kb/faq.php?id=81" target="_blank" rel="noreferrer">Get TVDB key</a>
+              </div>
+
+              <label for="rpdb">RPDB API key</label>
+              <div class="inline-fields">
+                <input id="rpdb" type="text" placeholder="RPDB API key" autocomplete="off" />
+                <a href="https://www.ratingposterdb.com/settings/api" target="_blank" rel="noreferrer">Open RPDB</a>
+              </div>
+
+              <small>Metadata keys are stored in the plan JSON only and are not sent to any backend.</small>
+            </div>
           </div>
         </section>
 
@@ -166,7 +195,7 @@
           <fieldset class="field-group">
             <legend>Metadata sources</legend>
             <label><input type="checkbox" name="metadataSource" value="TMDB" checked /> TMDB</label>
-            <label><input type="checkbox" name="metadataSource" value="TVDB" checked /> TVDB</label>
+            <label><input type="checkbox" name="metadataSource" value="TVDB" /> TVDB</label>
             <label><input type="checkbox" name="metadataSource" value="AniList" checked /> AniList</label>
             <label><input type="checkbox" name="metadataSource" value="MAL" checked /> MyAnimeList</label>
             <label><input type="checkbox" name="metadataSource" value="RPDB" /> RPDB</label>
